@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DasGlobalModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Empresa">
+    <Key>
+      <PropertyRef Name="EmpresaNumero" />
+    </Key>
+    <Property Name="EmpresaNumero" Type="int" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="64" Nullable="false" />
+    <Property Name="pais" Type="varchar" MaxLength="64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Persona">
+    <Key>
+      <PropertyRef Name="PersonaNumero" />
+    </Key>
+    <Property Name="PersonaNumero" Type="int" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="64" Nullable="false" />
+    <Property Name="Cui" Type="varchar" MaxLength="16" />
+    <Property Name="SucursalNumero" Type="int" />
+  </EntityType>
+  <EntityType Name="Sucursal">
+    <Key>
+      <PropertyRef Name="SucursalNumero" />
+    </Key>
+    <Property Name="SucursalNumero" Type="int" Nullable="false" />
+    <Property Name="nombre" Type="varchar" MaxLength="64" Nullable="false" />
+    <Property Name="direccion" Type="varchar" MaxLength="128" Nullable="false" />
+    <Property Name="EmpresaNumero" Type="int" />
+  </EntityType>
+  <Association Name="Relationship1">
+    <End Role="Empresa" Type="Self.Empresa" Multiplicity="0..1" />
+    <End Role="Sucursal" Type="Self.Sucursal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Empresa">
+        <PropertyRef Name="EmpresaNumero" />
+      </Principal>
+      <Dependent Role="Sucursal">
+        <PropertyRef Name="EmpresaNumero" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="Relationship2">
+    <End Role="Sucursal" Type="Self.Sucursal" Multiplicity="0..1" />
+    <End Role="Persona" Type="Self.Persona" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sucursal">
+        <PropertyRef Name="SucursalNumero" />
+      </Principal>
+      <Dependent Role="Persona">
+        <PropertyRef Name="SucursalNumero" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DasGlobalModelStoreContainer">
+    <EntitySet Name="Empresa" EntityType="Self.Empresa" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Persona" EntityType="Self.Persona" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Sucursal" EntityType="Self.Sucursal" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="Relationship1" Association="Self.Relationship1">
+      <End Role="Empresa" EntitySet="Empresa" />
+      <End Role="Sucursal" EntitySet="Sucursal" />
+    </AssociationSet>
+    <AssociationSet Name="Relationship2" Association="Self.Relationship2">
+      <End Role="Sucursal" EntitySet="Sucursal" />
+      <End Role="Persona" EntitySet="Persona" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

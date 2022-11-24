@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DasGlobalModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Empresa">
+    <Key>
+      <PropertyRef Name="EmpresaNumero" />
+    </Key>
+    <Property Name="EmpresaNumero" Type="Int32" Nullable="false" />
+    <Property Name="Nombre" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="pais" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Sucursal" Relationship="Self.Relationship1" FromRole="Empresa" ToRole="Sucursal" />
+  </EntityType>
+  <EntityType Name="Persona">
+    <Key>
+      <PropertyRef Name="PersonaNumero" />
+    </Key>
+    <Property Name="PersonaNumero" Type="Int32" Nullable="false" />
+    <Property Name="Nombre" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Cui" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="SucursalNumero" Type="Int32" />
+    <NavigationProperty Name="Sucursal" Relationship="Self.Relationship2" FromRole="Persona" ToRole="Sucursal" />
+  </EntityType>
+  <EntityType Name="Sucursal">
+    <Key>
+      <PropertyRef Name="SucursalNumero" />
+    </Key>
+    <Property Name="SucursalNumero" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="direccion" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="EmpresaNumero" Type="Int32" />
+    <NavigationProperty Name="Empresa" Relationship="Self.Relationship1" FromRole="Sucursal" ToRole="Empresa" />
+    <NavigationProperty Name="Persona" Relationship="Self.Relationship2" FromRole="Sucursal" ToRole="Persona" />
+  </EntityType>
+  <Association Name="Relationship1">
+    <End Role="Empresa" Type="Self.Empresa" Multiplicity="0..1" />
+    <End Role="Sucursal" Type="Self.Sucursal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Empresa">
+        <PropertyRef Name="EmpresaNumero" />
+      </Principal>
+      <Dependent Role="Sucursal">
+        <PropertyRef Name="EmpresaNumero" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="Relationship2">
+    <End Role="Sucursal" Type="Self.Sucursal" Multiplicity="0..1" />
+    <End Role="Persona" Type="Self.Persona" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sucursal">
+        <PropertyRef Name="SucursalNumero" />
+      </Principal>
+      <Dependent Role="Persona">
+        <PropertyRef Name="SucursalNumero" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DasGlobalEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Empresa" EntityType="Self.Empresa" />
+    <EntitySet Name="Persona" EntityType="Self.Persona" />
+    <EntitySet Name="Sucursal" EntityType="Self.Sucursal" />
+    <AssociationSet Name="Relationship1" Association="Self.Relationship1">
+      <End Role="Empresa" EntitySet="Empresa" />
+      <End Role="Sucursal" EntitySet="Sucursal" />
+    </AssociationSet>
+    <AssociationSet Name="Relationship2" Association="Self.Relationship2">
+      <End Role="Sucursal" EntitySet="Sucursal" />
+      <End Role="Persona" EntitySet="Persona" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
